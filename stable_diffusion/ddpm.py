@@ -86,12 +86,15 @@ class DDPMSampler:
 
         # 2. compute predicted original sample from predicted noise also called
         # "predicted x_0" of formula (15) from https://arxiv.org/pdf/2006.11239.pdf
+        # x_0 -> no noise image | x_t -> noisy image | β_prod_t = 1 - α_prod_t
+        # x_0 = (x_t - β_prod_t ** (0.5) * noise * x_t) / α_prod_t ** (0.5)
         pred_original_sample = (
             latents - beta_prod_t ** (0.5) * model_output
         ) / alpha_prod_t ** (0.5)
 
         # 4. Compute coefficients for pred_original_sample x_0 and current sample x_t
         # See formula (7) from https://arxiv.org/pdf/2006.11239.pdf
+        # mu = (α_prod_t_prev ** (0.5) * β_t * x_0) / β_prod_t + (α_t ** (0.5) * β_prod_t_prev * x_t) / β_prod_t
         pred_original_sample_coeff = (
             alpha_prod_t_prev ** (0.5) * current_beta_t
         ) / beta_prod_t
